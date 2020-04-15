@@ -1,0 +1,5 @@
+User-agent: *
+
+sitemap: https://devl-revenue-health.netlify.com/sitemap.xml
+
+
