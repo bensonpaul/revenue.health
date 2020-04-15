@@ -42,6 +42,10 @@
 })(); 
 
 $(document).ready(function(){
+            $("a:contains('Read on')").each( function( i, element ) {
+                $(this).attr('target','_blank');
+             
+         });
         // Add minus icon for collapse element which is open by default
         $(".collapse.show").each(function(){
             $(this).prev(".card-header").find(".fa").addClass("fa-minus").removeClass("fa-plus");
