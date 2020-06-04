@@ -72,9 +72,10 @@ async function main() {
 								let curated_attachment_basename = '';
 								let curated_attachment_extension = '';
 								let extension_img = '';
+                                let imagePath = '';
                                 elements.some(function (attachment, index, _arr) {
                                     if (attachment['_links']['self']['title']) {
-										attachment_title = attachment['_links']['self']['title'];
+                                        attachment_title = attachment['_links']['self']['title'];
 										curated_attachment_extension = path.extname(attachment_title);
 										curated_attachment_basename = path.basename(attachment_title, curated_attachment_extension);							
 										if (attachment_title === 'Curated_Featured_Image.pdf') {
@@ -123,13 +124,13 @@ async function main() {
                                         let pdfFileName = item['subject'].replace(/[^a-z\d\s]+/gi, "");
                                         pdfFileName = pdfFileName.trim();
                                         pdfFileName = pdfFileName + '.pdf';
-                                        imagePath = "/img/resources/" + pdfFileName;
+                                        pdfPath = "/img/resources/" + pdfFileName;
                                         mdContent = mdContent + "pdfURL : " + '"' + pdfPath + '"' + "\n";
                                         fs.writeFile("static/img/resources/" + pdfFileName, responseData, 'binary', function (err) {
                                             if (err) {
                                                 console.log(err);
                                             } else {
-                                                console.log(fileName, "-image is saved!");
+                                                console.log(pdfFileName, "-pdf is saved!");
                                             }
                                         });
                                     });
@@ -154,7 +155,8 @@ async function main() {
                                                         ogSiteName = openMeta['content'];
                                                         mdContent = mdContent + "ogSiteName: " + '"' + openMeta['content'] + '"' + "\n";
                                                     } else if (openMeta['name'] === 'og:image') {
-                                                        mdContent = mdContent + "ogImage: " + '"' + openMeta['content'] + '"' + "\n";
+                                                        //mdContent = mdContent + "ogImage: " + '"' + openMeta['content'] + '"' + "\n";
+                                                        mdContent = mdContent + "ogImage: " + '"' + imagePath + '"' + "\n";
                                                     }
                                                 }
                                             }
@@ -172,7 +174,8 @@ async function main() {
                                                     } else if (twitterMeta['name'] === 'twitter:site') {
                                                         mdContent = mdContent + "twitterSite: " + '"' + twitterMeta['content'] + '"' + "\n";
                                                     } else if (twitterMeta['name'] === 'twitter:image') {
-                                                        mdContent = mdContent + "twitterImage: " + '"' + twitterMeta['content'] + '"' + "\n";
+                                                        //mdContent = mdContent + "twitterImage: " + '"' + twitterMeta['content'] + '"' + "\n";
+                                                          mdContent = mdContent + "twitterImage: " + '"' + imagePath + '"' + "\n";
                                                     } else if (twitterMeta['name'] === 'twitter:creator') {
                                                         mdContent = mdContent + "twitterCreator: " + '"' + twitterMeta['content'] + '"' + "\n";
                                                     }
@@ -185,7 +188,6 @@ async function main() {
                                 mdContent = mdContent + "layout: " + '"' + layoutName + '"' + "\n";
                                 mdContent = mdContent + "breadcrumbs:\n - Home\n - News\n - " + mdFileName + "\n";
                                 mdContent = mdContent + "breadcrumbLinks:\n - / \n - /news\n - / \n";
-                               // mdContent = mdContent + "---\n" + converter.convert(item['description']['raw'].replace(/[^\x20-\x7E]/g, '')) + "\n";
                                 mdContent = mdContent + "---\n" + turndownService.turndown(item['description']['raw'].replace(/[^\x20-\x7E]/g, '')) + "\n";
                                 fs.writeFile('content/news/' + mdFileName + '.md', mdContent, function (err) {
                                     if (err) { throw err } else {
