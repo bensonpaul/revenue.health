@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://devl-revenuehealth.netlify.app/"
 title = "Healthcare Revenue Cycle Management & Administration | Revenue Acceleration LLC"
 theme = "universal"
 languageCode = "en-us"
