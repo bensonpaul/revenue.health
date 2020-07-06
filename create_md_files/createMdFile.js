@@ -42,6 +42,7 @@ async function main() {
                 await getRequest(options).then(async function(result) {
                         let workPackages = result['_embedded']['elements'];
                         for (const item of workPackages) {
+                            if(item['id'] != 536){
                             let mdContent = '';
                             let sourceBaseUrl = '';
                             sourceBaseUrl = item[CONFIGURATION.cleanUrlField];
@@ -210,6 +211,8 @@ async function main() {
                                     console.log(mdFileName, 'Saved successfully!');
                                 }
                             });
+                        } //if lectio close
+
                         } //for close
                     },
                     function(err) {
