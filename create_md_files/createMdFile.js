@@ -3,6 +3,7 @@ const CONFIGURATION = require('./configuration');
 const fs = require('fs');
 const TurndownService = require('turndown');
 const turndownService = new TurndownService();
+const sharp = require("sharp");
 const path = require('path');
 getRequest = (options, json = true) => new Promise((resolve, reject) => {
     request.get(options, function(err, resp, body) {
@@ -74,6 +75,8 @@ async function main() {
                                         let curated_attachment_extension = '';
                                         let extension_img = '';
                                         let imagePath = '';
+										let resizedFile = '';
+										let resizedImagePath = '';
                                         let pdfPath = '';
                                         elements.some(function(attachment, index, _arr) {
                                             if (attachment['_links']['self']['title']) {
@@ -99,6 +102,8 @@ async function main() {
                                             await getRequest(options, false).then(async function(responseData) {
                                                 let fileName = item['subject'].replace(/[^a-z\d\s]+/gi, "");
                                                 fileName = fileName.trim();
+												resizedFile = "static/img/resources/thumbs/" + fileName + '_800W' + extension_img;
+												resizedImagePath = "/img/resources/thumbs/" + fileName + '_800W' + extension_img;
                                                 fileName = fileName + extension_img;
                                                 imagePath = "/img/resources/" + fileName;
                                                 mdContent = mdContent + "banner : " + '"' + imagePath + '"' + "\n";
@@ -107,6 +112,12 @@ async function main() {
                                                         console.log(err);
                                                     } else {
                                                         console.log(fileName, "-image is saved!");
+													   	sharp("static/img/resources/" + fileName)
+														  .resize({ width: 800 })
+														  .toFile(resizedFile, function(err) {
+															// output.jpg is a 800 pixels wide
+															// containing a scaled and cropped version of input.jpg
+														 });
                                                     }
                                                 });
                                             });
@@ -160,7 +171,8 @@ async function main() {
                                                                 mdContent = mdContent + "ogSiteName: " + '"' + ogSiteName + '"' + "\n";
                                                             } else if (openMeta['name'] === 'og:image') {
                                                                 //mdContent = mdContent + "ogImage: " + '"' + openMeta['content'] + '"' + "\n";
-                                                                mdContent = mdContent + "ogImage: " + '"' + imagePath + '"' + "\n";
+                                                               // mdContent = mdContent + "ogImage: " + '"' + imagePath + '"' + "\n";
+																  mdContent = mdContent + "ogImage: " + '"' + resizedImagePath + '"' + "\n";	   
                                                             }
                                                         }
                                                     }
@@ -179,7 +191,8 @@ async function main() {
                                                                 mdContent = mdContent + "twitterSite: " + '"' + twitterMeta['content'] + '"' + "\n";
                                                             } else if (twitterMeta['name'] === 'twitter:image') {
                                                                 //mdContent = mdContent + "twitterImage: " + '"' + twitterMeta['content'] + '"' + "\n";
-                                                                mdContent = mdContent + "twitterImage: " + '"' + imagePath + '"' + "\n";
+                                                               // mdContent = mdContent + "twitterImage: " + '"' + imagePath + '"' + "\n";
+															    mdContent = mdContent + "twitterImage: " + '"' + resizedImagePath + '"' + "\n";
                                                             } else if (twitterMeta['name'] === 'twitter:creator') {
                                                                 mdContent = mdContent + "twitterCreator: " + '"' + twitterMeta['content'] + '"' + "\n";
                                                             }
