@@ -13,6 +13,7 @@
     "html-to-markdown": "^1.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "sharp": "^0.25.4",
     "turndown": "^6.0.0"
   }
 }
